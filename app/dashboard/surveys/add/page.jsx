@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styles from "@/app/ui/dashboard/surveys/AddSurvey/AddSurvey.module.css";
 import db from "@/app/lib/firebase";
 import { collection, addDoc, doc, writeBatch } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const AddSurveyPage = () => {
   const [survey, setSurvey] = useState({
@@ -12,7 +13,7 @@ const AddSurveyPage = () => {
     questions: [],
   });
 
-  console.log(survey);
+  const router = useRouter();
 
   const addQuestion = () => {
     const newQuestions = [
@@ -91,6 +92,8 @@ const AddSurveyPage = () => {
         title: survey.title,
         description: survey.description,
         status: survey.status,
+        start_tiome: new Date(),
+        end_time: new Date(),
         createdAt: new Date(),
         isActive: true,
       });
@@ -107,6 +110,7 @@ const AddSurveyPage = () => {
 
       await batch.commit();
       console.log("Survey and questions saved successfully");
+      router.push("/dashboard/surveys");
       // Optionally reset the survey state or navigate the user to a different page
     } catch (error) {
       console.error("Error saving survey: ", error);
